@@ -8,7 +8,7 @@ const signUserUp = async (req, res) => {
         const {name , email , password} = req.body;
 
         if (!password) {
-            return res.status(400).json({ msg: "Password is required" });
+            return res.status(400).json({ message: "Password is required" });
         }
         
         const hashedPassword = bcrypt.hash(password, 8);
