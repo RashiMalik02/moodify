@@ -1,5 +1,5 @@
 const express = require('express');
-const config = require('../config')
+
 
 const emotionToQuery = {
   happy: "happy upbeat positive",
@@ -18,8 +18,8 @@ const spotifyController = async (req, res) => {
 
     const query = emotionToQuery[emotion] || "mood playlist";
 
-    const clientId = config.SPOTIFY_CLIENT_ID;
-    const clientSecret = config.SPOTIFY_CLIENT_SECRET;
+    const clientId = process.env.SPOTIFY_CLIENT_ID;
+    const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 
     const tokenResponse = await fetch("https://accounts.spotify.com/api/token", {
       method: "POST",
@@ -46,11 +46,16 @@ const spotifyController = async (req, res) => {
 
     const data = await searchResponse.json();
 
-    const playlists = data.playlists.items.map(p => ({
-      name: p.name,
-      url: p.external_urls.spotify,
-      image: p.images?.[0]?.url
+    const playlists = data.playlists.items
+    
+    .filter(p => p && p.name && p.external_urls && p.images && p.images[0])
+    .map(p => ({
+        name: p.name,
+        url: p.external_urls.spotify,
+        image: p.images[0].url
     }));
+
+res.json({ emotion, playlists });
 
     res.json({ emotion, playlists });
 

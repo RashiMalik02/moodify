@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 const { userModel } = require('../models/user')
-const config = require('../config')
 
 const signUserUp = async (req, res) => {
     try {
@@ -11,12 +10,12 @@ const signUserUp = async (req, res) => {
             return res.status(400).json({ message: "Password is required" });
         }
         
-        const hashedPassword = bcrypt.hash(password, 8);
+        const hashedPassword = await bcrypt.hash(password, 8);
 
         await userModel.create({
             name,
             email,
-            hashedPassword,
+            passwordHash: hashedPassword,
             createdAt: Date.now(),
         });
 
@@ -42,11 +41,11 @@ const userLogin = async (req, res) => {
       return res.status(403).json({ msg: "Wrong password" });
     }
 
-    const token = jwt.sign({ _id: user._id }, config.JWT_SECRET);
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET , { expiresIn: '1d' });
     res.json({ token });
   } catch (error) {
-    console.error(error);
-    res.status(403).json({ msg: "Login failed" });
+    console.error("LOGIN ERROR:", error); // 🚨 LOG THE ERROR WITH A LABEL
+    res.status(403).json({ msg: "Login failed - Check server console for details." });
   }
 }
 
