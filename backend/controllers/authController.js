@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 const { userModel } = require('../models/user')
-const {JWT_SECRET} = require('../config')
+const config = require('../config')
 
 const signUserUp = async (req, res) => {
     try {
@@ -42,7 +42,7 @@ const userLogin = async (req, res) => {
       return res.status(403).json({ msg: "Wrong password" });
     }
 
-    const token = jwt.sign({ _id: user._id }, JWT_SECRET);
+    const token = jwt.sign({ _id: user._id }, config.JWT_SECRET);
     res.json({ token });
   } catch (error) {
     console.error(error);

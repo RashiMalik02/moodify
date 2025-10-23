@@ -1,4 +1,5 @@
 const express = require('express');
+const config = require('../config')
 
 const emotionToQuery = {
   happy: "happy upbeat positive",
@@ -17,8 +18,8 @@ const spotifyController = async (req, res) => {
 
     const query = emotionToQuery[emotion] || "mood playlist";
 
-    const clientId = process.env.SPOTIFY_CLIENT_ID;
-    const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+    const clientId = config.SPOTIFY_CLIENT_ID;
+    const clientSecret = config.SPOTIFY_CLIENT_SECRET;
 
     const tokenResponse = await fetch("https://accounts.spotify.com/api/token", {
       method: "POST",
