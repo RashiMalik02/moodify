@@ -5,4 +5,4 @@ const spotifyRouter = express.Router();
 
 spotifyRouter.get('/playlist/:emotion', spotifyController)
 
-module.exports = {spotifyController};
+module.exports = {spotifyRouter};

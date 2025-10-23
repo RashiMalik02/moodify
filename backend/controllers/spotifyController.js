@@ -58,4 +58,4 @@ const spotifyController = async (req, res) => {
   }
 };
 
-module.exports = spotifyController;
+module.exports = {spotifyController};
